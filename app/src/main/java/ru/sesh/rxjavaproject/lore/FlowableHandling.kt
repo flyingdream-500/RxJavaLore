@@ -15,17 +15,29 @@ import java.util.concurrent.TimeUnit
  */
 object FlowableHandling {
 
-    private val flowableItem =
-        Observable.range(0, 500)
-            .toDropStrategy()
+    private val fastFlowable =
+        Flowable.range(0, 50000)
+            .onBackpressureBuffer()
             .concatMap {
-                Flowable.just(it).delay(50, TimeUnit.MILLISECONDS)
+                Flowable.just(it).delay(100, TimeUnit.MILLISECONDS)
             }
+
+    private val slowFlowable = Flowable.interval(1_000, TimeUnit.MILLISECONDS)
+
+    @SuppressLint("CheckResult")
+    fun launchSlowFastFlowable() {
+        Flowable.zip(slowFlowable, fastFlowable) { slow, fast ->
+            "$slow and $fast"
+        }
             .subscribeOn(Schedulers.single())
+            .subscribe {
+                logging(it)
+            }
+    }
 
     @SuppressLint("CheckResult")
     fun launchFlowable() {
-        flowableItem.subscribe {
+        fastFlowable.subscribe {
             logging(it.toString())
         }
     }

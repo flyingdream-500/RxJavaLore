@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
 import ru.sesh.rxjavaproject.lore.FlowableHandling.launchFlowable
+import ru.sesh.rxjavaproject.lore.FlowableHandling.launchSlowFastFlowable
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -12,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<TextView>(R.id.text).apply {
             setOnClickListener {
-                launchFlowable()
+                launchSlowFastFlowable()
             }
         }
     }
